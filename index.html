@@ -99,7 +99,7 @@
       async function initDDV(){
         await Dynamsoft.DDV.setConfig({
             license: "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9", // Public trial license which is valid for 24 hours
-            engineResourcePath: "/dynamsoft-document-viewer@1.0.0/dist/engine", // Lead to a folder containing the distributed WASM files
+            engineResourcePath: "./js/engine", // Lead to a folder containing the distributed WASM files
         });
         docManager = Dynamsoft.DDV.documentManager;
         doc = docManager.createDocument({
