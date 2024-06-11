@@ -105,8 +105,8 @@
       async function initDDV(){
         Dynamsoft.DDV.Core.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
         Dynamsoft.DDV.Core.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-document-viewer@1.1.0/dist/engine";
-        Dynamsoft.DDV.Core.loadWasm();
-        Dynamsoft.DDV.Core.init(); 
+        await Dynamsoft.DDV.Core.loadWasm();
+        await Dynamsoft.DDV.Core.init(); 
         //await Dynamsoft.DDV.setConfig({
             //license: "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9", // Public trial license which is valid for 24 hours
             //engineResourcePath: "./js/engine", // Lead to a folder containing the distributed WASM files
