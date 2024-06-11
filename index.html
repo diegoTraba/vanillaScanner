@@ -167,6 +167,7 @@
       }
 
       document.getElementById("loadFileBtn").addEventListener("click",function(){
+        console.log("subir archivo");
         document.getElementById("file").click();
       })
       document.getElementById("detectBtn").addEventListener("click",async function(){
@@ -180,6 +181,7 @@
         
       })
       document.getElementById("liveScanBtn").addEventListener("click",function(){
+        console.log("captureViewer: "+ captureViewer)
         if (captureViewer) {
           document.getElementById("captureViewer").style.display = "block";
           captureViewer.play({fill:true});
