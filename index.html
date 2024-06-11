@@ -114,7 +114,7 @@
             enableAutoDetect: true
           }
         });
-        const cameras = await captureViewer.getAllCameras();
+        const cameras = captureViewer.getAllCameras();
         for (var i=0;i<cameras.length;i++)
         { 
             if(cameras[i].label.indexOf("Droid") != -1){ //for desktop testing
