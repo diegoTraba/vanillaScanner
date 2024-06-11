@@ -98,6 +98,8 @@
           document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
           const detectHandler = new OpenCVDocumentDetectHandler(documentScanner);
           Dynamsoft.DDV.setProcessingHandler("documentBoundariesDetect", detectHandler);
+          Dynamsoft.DDV.Core.loadWasm();
+          Dynamsoft.DDV.Core.init(); 
         }
       };
 
