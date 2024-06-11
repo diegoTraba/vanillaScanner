@@ -121,6 +121,7 @@
             enableAutoDetect: true
           }
         });
+        console.log("captureViewCreated: "+ captureViewer)
         const cameras = captureViewer.getAllCameras();
         for (var i=0;i<cameras.length;i++)
         { 
@@ -129,7 +130,7 @@
                 break;
             }
         }
-        
+        console.log("camerasCreated: "+ cameras)
         captureViewer.on("captured", async (e) => {
             // Stop video stream and hide capture viewer's container
             captureViewer.stop();
