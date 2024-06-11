@@ -89,7 +89,7 @@
       let perspectiveViewer;
       let docManager;
       let doc;
-      initDDV();
+      //initDDV();
 
       var Module = {
         // https://emscripten.org/docs/api_reference/module.html#Module.onRuntimeInitialized
@@ -98,8 +98,8 @@
           document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
           const detectHandler = new OpenCVDocumentDetectHandler(documentScanner);
           Dynamsoft.DDV.setProcessingHandler("documentBoundariesDetect", detectHandler);
-          Dynamsoft.DDV.Core.loadWasm();
-          Dynamsoft.DDV.Core.init(); 
+          //Dynamsoft.DDV.Core.loadWasm();
+          //Dynamsoft.DDV.Core.init(); 
         }
       };
 
