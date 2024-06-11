@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="./js/ddv.css">
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
+    <script type="module">
+      import { DocumentScanner, OpenCVDocumentDetectHandler } from './dist/opencv-document-scanner.js';
+      window["DocumentScanner"] = DocumentScanner;
+      window["OpenCVDocumentDetectHandler"] = OpenCVDocumentDetectHandler;
+    </script>
     <title>OpenCV Document Scanner</title>
     <style>
       #app {
