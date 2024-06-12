@@ -197,7 +197,9 @@
       })
 
       document.getElementById("SaveScan").addEventListener("click",function(){
-        var imgB64=document.getElementById("output").src
+        //var imgB64=document.getElementById("output").src
+        var imgB64=document.getElementById("photo").src;
+        console.log(imgB64);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "https://localhost:7097/api/respuestas/", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
