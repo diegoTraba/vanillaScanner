@@ -199,7 +199,8 @@
       document.getElementById("SaveScan").addEventListener("click",function(){
         //var imgB64=document.getElementById("output").src
         var imgB64=document.getElementById("photo").src;
-        imgB64= imgB64.substr(imgB64.indexOf(',')+1)
+        console.log(imgB64);
+        imgB64= imgB64.substr(imgB64.indexOf(',')+1);
         console.log(imgB64);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "https://localhost:7097/api/respuestas/", true);
