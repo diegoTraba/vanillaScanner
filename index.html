@@ -53,13 +53,13 @@
       <div id="status">Loading OpenCV...</div>
       <div>
         <button id="loadFileBtn">
-          Load File
+          Cargar imagen
         </button>
-        <button id="detectBtn">
-          Detect
+        <button id="detectBtn" style="display:none;">
+          Detectar
         </button>
         <button id="liveScanBtn">
-          Live Scan
+          Escaner documento
         </button>
       </div>
       <div>
@@ -84,7 +84,7 @@
       </div>
       <div>
         <button id="SaveScan" style="display:none;">
-          Save scan
+          Enviar datos
         </button>
       </div>
     </div>
@@ -112,10 +112,6 @@
         Dynamsoft.DDV.Core.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-document-viewer@1.1.0/dist/engine";
         await Dynamsoft.DDV.Core.loadWasm();
         await Dynamsoft.DDV.Core.init(); 
-        //await Dynamsoft.DDV.setConfig({
-            //license: "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9", // Public trial license which is valid for 24 hours
-            //engineResourcePath: "./js/engine", // Lead to a folder containing the distributed WASM files
-        //});
 
         //obtengo el queryString de la url
         const queryString = window.location.search;
@@ -125,14 +121,18 @@
         doc = docManager.createDocument({
           name: "doc"
         });
+
+        //Creo la instancia del captureViewer que sera la vista de la camara que detecta los bordes del papel
+        //por defecto desactivo la autocaptura para evitar que se haga la foto demasiado rapido y no corte bien por los bordes del papel
         captureViewer = new Dynamsoft.DDV.CaptureViewer({
           container: document.getElementById("captureViewer"),
           viewerConfig: {
-            enableAutoCapture: true,
+            enableAutoCapture: false,
             enableAutoDetect: true
           }
         });
-        console.log("captureViewCreated: "+ captureViewer)
+
+        //carga las camaras disponibles en el dispositivo
         const cameras = captureViewer.getAllCameras();
         for (var i=0;i<cameras.length;i++)
         { 
@@ -141,13 +141,14 @@
                 break;
             }
         }
-        console.log("camerasCreated: "+ cameras)
+
+        //Evento lanzado al hacer la captura de la imagen. Controla si seleccionamos la edicion para llevarnos a ella o no y carga en un nuevo canvas "photoRaw" la imagen final recortada
         captureViewer.on("captured", async (e) => {
             // Stop video stream and hide capture viewer's container
             captureViewer.stop();
             document.getElementById("captureViewer").style.display = "none";
             const pageData =  await captureViewer.currentDocument.getPageData(e.pageUid);
-            // Original image
+            // imagen original
             let url = URL.createObjectURL(pageData.raw.data);
             document.getElementById("photo").src = url;
             await loadImage(document.getElementById("photoRaw"), url);
@@ -163,10 +164,12 @@
           //una vez termino de hacer la captura y edicion de la foto pongo visible el boton para enviar los resultados a la API
           document.getElementById("SaveScan").style.display = "block";
         });
+        
         perspectiveViewer = new Dynamsoft.DDV.PerspectiveViewer({
           container: document.getElementById("perspectiveViewer"),
           uiConfig: isMobile()? mobilePerspectiveUiConfig : pcPerspectiveUiConfig
         });
+        
         perspectiveViewer.on("done", async () => {
           const quad = perspectiveViewer.getQuadSelection();
           const points = [];
@@ -179,13 +182,15 @@
         });
         captureViewer.openDocument(doc.uid);
         perspectiveViewer.openDocument(doc.uid);
-        console.log()
       }
 
+      //Evento click del boton "Cargar Imagen". Abre el inpsector para seleccionar la imagen y habilita el boton "Guardar imagen"
       document.getElementById("loadFileBtn").addEventListener("click",function(){
         document.getElementById("file").click();
         document.getElementById("SaveScan").style.display = "block";
       })
+
+      //Evento click del boton "Detectar"
       document.getElementById("detectBtn").addEventListener("click",async function(){
         let points = documentScanner.detect(document.getElementById("photoRaw"));
         if (document.getElementById("enableEditing").checked) {
@@ -193,17 +198,19 @@
           showPerspectiveViewer(points);
         }else{
           getCroppedImage(points);
-        }
-        
+        }        
       })
+
+      // Evento click del boton "Escaner documento". carga la vista de la camara del recorte con resolucion a 1080p
       document.getElementById("liveScanBtn").addEventListener("click",function(){
-        console.log("captureViewer: "+ captureViewer)
         if (captureViewer) {
           document.getElementById("captureViewer").style.display = "block";
           captureViewer.play({fill:true, resolution: [1920,1080]});
         }
       })
 
+      //Evento click del boton "Enviar datos". Obtiene la imagen recortada en base64 y la pasa a la API a traves de una peticion POST. Si se obtiene un OK como respuesta en el POST
+      //se hace una redireccion a la pagina de Plantillas.aspx de la web del alumno
       document.getElementById("SaveScan").addEventListener("click",function(){
         //var imgB64=document.getElementById("output").src
         var imgB64=document.getElementById("photo").src;
@@ -232,6 +239,7 @@
           console.log("Response KO: " + xhr.responseText);
         }
       })
+      
       function getCroppedImage(points){
         let canvas = documentScanner.crop(document.getElementById("photoRaw"),points);
         document.getElementById("output").src = canvas.toDataURL();
