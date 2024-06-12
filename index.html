@@ -83,7 +83,7 @@
         <div id="perspectiveViewer" class="fullscreen"></div>
       </div>
       <div>
-        <button id="SaveScan">
+        <button id="SaveScan" style="display:none;">
           Save scan
         </button>
       </div>
@@ -116,6 +116,11 @@
             //license: "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9", // Public trial license which is valid for 24 hours
             //engineResourcePath: "./js/engine", // Lead to a folder containing the distributed WASM files
         //});
+
+        //obtengo el queryString de la url
+        const queryString = window.location.search;
+        console.log(queryString);
+        
         docManager = Dynamsoft.DDV.documentManager;
         doc = docManager.createDocument({
           name: "doc"
@@ -149,11 +154,14 @@
             if (document.getElementById("enableEditing").checked) {
               let points = documentScanner.detect(document.getElementById("photoRaw"));
               await loadImageToDoc(document.getElementById("photoRaw").src);
-              showPerspectiveViewer(points);
+              showPerspectiveViewer(points);          
             }else{
               getCroppedImage();
               captureViewer.currentDocument.deleteAllPages();
             }
+
+          //una vez termino de hacer la captura y edicion de la foto pongo visible el boton para enviar los resultados a la API
+          document.getElementById("SaveScan").style.display = "block";
         });
         perspectiveViewer = new Dynamsoft.DDV.PerspectiveViewer({
           container: document.getElementById("perspectiveViewer"),
@@ -202,13 +210,25 @@
         console.log(imgB64);
         imgB64= imgB64.substr(imgB64.indexOf(',')+1);
         console.log(imgB64);
+
+        // GET
         var xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://localhost:7097/api/Respuestas/1");
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send();
+        console.log(xhr.response);
+
+        // POST
+        xhr = new XMLHttpRequest();
         xhr.open("POST", "https://localhost:7097/api/respuestas/", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({"imagenB64": imgB64}));
+
+        //si recibo respuesta correcta redirecciono a la web del alumno para cargar las respuestas en la plantilla
         if (xhr.status >= 200 && xhr.status < 300) {
           // OK
           console.log("Response OK:" + xhr.responseText);
+          window.location.replace("http://localhost:52218/gescon/examenes/plantilla/Plantilla.aspx?datos=true");
         } else {
           // KO
           console.log("Response KO: " + xhr.responseText);
