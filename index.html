@@ -203,7 +203,7 @@
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "https://localhost:7097/api/respuestas/", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({"imagenB64": imbB64}));
+        xhr.send(JSON.stringify({"imagenB64": imgB64}));
       })
       function getCroppedImage(points){
         let canvas = documentScanner.crop(document.getElementById("photoRaw"),points);
