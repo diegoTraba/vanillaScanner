@@ -183,8 +183,8 @@
       }
 
       document.getElementById("loadFileBtn").addEventListener("click",function(){
-        console.log("subir archivo");
         document.getElementById("file").click();
+        document.getElementById("SaveScan").style.display = "block";
       })
       document.getElementById("detectBtn").addEventListener("click",async function(){
         let points = documentScanner.detect(document.getElementById("photoRaw"));
@@ -207,9 +207,7 @@
       document.getElementById("SaveScan").addEventListener("click",function(){
         //var imgB64=document.getElementById("output").src
         var imgB64=document.getElementById("photo").src;
-        console.log(imgB64);
         imgB64= imgB64.substr(imgB64.indexOf(',')+1);
-        console.log(imgB64);
 
         // GET
         var xhr = new XMLHttpRequest();
