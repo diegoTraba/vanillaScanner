@@ -221,23 +221,41 @@
         xhr.open("GET", "https://localhost:7097/api/Respuestas/1");
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send();
-        console.log(xhr.response);
+        //console.log(xhr.response);
 
         // POST
         xhr = new XMLHttpRequest();
         xhr.open("POST", "https://localhost:7097/api/respuestas/", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+                window.location.replace("http://localhost:52218/gescon/examenes/plantilla/Plantilla.aspx?datos=true");
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+          console.log("Response KO: " + xhr.statusText);
+        };
         xhr.send(JSON.stringify({"imagenB64": imgB64}));
 
         //si recibo respuesta correcta redirecciono a la web del alumno para cargar las respuestas en la plantilla
-        if (xhr.status >= 200 && xhr.status < 300) {
+        //if (xhr.status >= 200 && xhr.status < 300) {
           // OK
-          console.log("Response OK:" + xhr.responseText);
-          window.location.replace("http://localhost:52218/gescon/examenes/plantilla/Plantilla.aspx?datos=true");
-        } else {
+          //console.log("Response OK:" + xhr.responseText);
+          //window.location.replace("http://localhost:52218/gescon/examenes/plantilla/Plantilla.aspx?datos=true");
+        //} else {
           // KO
-          console.log("Response KO: " + xhr.responseText);
-        }
+          //console.log("Response KO: " + xhr.responseText);
+        //}
       })
       
       function getCroppedImage(points){
