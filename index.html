@@ -206,6 +206,13 @@
         xhr.open("POST", "https://localhost:7097/api/respuestas/", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({"imagenB64": imgB64}));
+        if (xhr.status >= 200 && xhr.status < 300) {
+          // OK
+          console.log("Response OK:" + xhr.responseText);
+        } else {
+          // KO
+          console.log("Response KO: " + xhr.responseText);
+        }
       })
       function getCroppedImage(points){
         let canvas = documentScanner.crop(document.getElementById("photoRaw"),points);
